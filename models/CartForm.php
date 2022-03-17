@@ -10,8 +10,9 @@ use yii\base\Model;
  */
 class CartForm extends Model
 {
+
     public $user;
-    public $product;
+    public $product = [];
     public $count;
 
     /**
@@ -21,7 +22,7 @@ class CartForm extends Model
     {
         return [
             [['user', 'product', 'count'], 'required'],
-            ['count', 'integer', 'min' => 0],
+            ['product', 'each', 'rule' => ['string']],
         ];
     }
 
@@ -29,8 +30,8 @@ class CartForm extends Model
     {
         return [
             'user' => 'Имя клиента',
-            'product' => 'Заказываемый товар',
-            'count' => 'Количество товара',
+            'product' => 'Заказываемые блюда',
+            'count' => 'Количество персон',
         ];
     }
 

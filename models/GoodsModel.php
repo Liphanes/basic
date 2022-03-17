@@ -11,13 +11,37 @@ use yii\db\ActiveRecord;
 class GoodsModel extends ActiveRecord
 {
 
-    public function checkProducts($prod)
+    public function checkProducts( array $prod)
     {
-       $query = "select * from dbo.products where name = '{$prod}'";
-       //выполняем запрос
+        if(!empty($prod)){
+            //тут можно сделать например так, есть варианты и через query builder
+            $query = 'SELECT * 
+              FROM `table` 
+             WHERE `id` IN (' . implode(',', array_map('intval', $prod)) . ')';
+            //выполняем запрос
+        }
+
+        $r_data = array();
         $goods = ['tea','coffe','cacao'];
-        $r_data = in_array($prod, $goods) ? $prod : null;
+        $fails = 0;
+        foreach($prod as $key=>$value){
+            if(in_array($value, $goods)){
+               $r_data['prods'][$value] = true;
+            }else{
+                $r_data['prods'][$value] = false;
+                $fails++;
+            }
+        }
+        $r_data['fails'] = $fails;
         return $r_data;
+    }
+
+    public function setShop(array $prods, $count, $id){
+        if(!empty($prods)){
+            //тут делаем insert'ы и в случае успеха возвращаем проверочный параметр
+            return true;
+        }
+        return false;
     }
 
     public function checkCount($prod, $count)
